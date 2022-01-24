@@ -9,6 +9,8 @@ int eb = 960; //Breite des Eingabefelds
 int eh = 300; //Höhe des Eingabefelds
 
 int anzahlZeilenumbrueche = 0;
+int buttonClickedDrawCalls = 0;
+
 boolean aufButtonX = false;
 boolean aufButtonY = false;
 boolean buttonClicked = false;
@@ -24,14 +26,19 @@ void draw(){
   aufButtonY = by <= mouseY && by + bh >= mouseY;
   if (aufButtonX && aufButtonY){
     fill(0,200,255);
-    if(buttonClicked){
-      fill(0,100,255);
-      buttonClicked=false;
-    }
   }
   else{
     fill(0,150,255);
   }
+  if(buttonClicked){
+      fill(0,100,255);
+      buttonClickedDrawCalls++;
+      //Das dunkle Blau wird für 8 Frames als Buttonfarbe gezeichnet
+      if(buttonClickedDrawCalls>8){
+        buttonClickedDrawCalls = 0;
+        buttonClicked=false;
+      }
+    }
   rect(bx,by,bb,bh);
   textSize(30);
   fill(0);
