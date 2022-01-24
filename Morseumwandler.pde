@@ -1,16 +1,17 @@
 int bx = 300; //x-Position des Butons
-int by = 300; //y-Position des Buttons
+int by = 340; //y-Position des Buttons
 int bb = 355; //Breite des Buttons
 int bh = 40; //Höhe des Buttons
 
 int ex = 20; //x-Position des Eingabefelds
 int ey = 20; //y-Position des Eingabefelds
 int eb = 960; //Breite des Eingabefelds
-int eh = 260; //Höhe des Eingabefelds
+int eh = 300; //Höhe des Eingabefelds
 
 int anzahlZeilenumbrueche = 0;
 boolean aufButtonX = false;
 boolean aufButtonY = false;
+boolean buttonClicked = false;
 String klartext = "";
 
 void setup(){
@@ -23,6 +24,10 @@ void draw(){
   aufButtonY = by <= mouseY && by + bh >= mouseY;
   if (aufButtonX && aufButtonY){
     fill(0,200,255);
+    if(buttonClicked){
+      fill(0,100,255);
+      buttonClicked=false;
+    }
   }
   else{
     fill(0,150,255);
@@ -52,6 +57,9 @@ void keyPressed(){
       break;
     case BACKSPACE:
       if(klartext.length()>0){
+        if(klartext.charAt(klartext.length()-1)=='\n'){
+          anzahlZeilenumbrueche--;
+        }
         klartext = klartext.substring(0,klartext.length()-1);
       }
       break;
@@ -60,6 +68,12 @@ void keyPressed(){
         klartext+=key;
     }
       break;
+  }
+}
+
+void mouseClicked(){
+  if(aufButtonX && aufButtonY){
+    buttonClicked=true;
   }
 }
 
