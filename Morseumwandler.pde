@@ -8,6 +8,7 @@ int ey = 20; //y-Position des Eingabefelds
 int eb = 960; //Breite des Eingabefelds
 int eh = 260; //Höhe des Eingabefelds
 
+int anzahlZeilenumbrueche = 0;
 boolean aufButtonX = false;
 boolean aufButtonY = false;
 String klartext = "";
@@ -45,7 +46,9 @@ void draw(){
 void keyPressed(){
   switch(key){
     case ENTER:
-      klartext+='\n';
+      if(anzahlZeilenumbrueche<8){
+        klartext+='\n';
+        anzahlZeilenumbrueche++;}
       break;
     case BACKSPACE:
       if(klartext.length()>0){
