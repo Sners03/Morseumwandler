@@ -8,6 +8,11 @@ int ey = 20; //y-Position des Eingabefelds
 int eb = 960; //Breite des Eingabefelds
 int eh = 300; //Höhe des Eingabefelds
 
+int ax = 20;
+int ay = 400;
+int ab = 960; //Breite des Eingabefelds
+int ah = 300; //Höhe des Eingabefelds
+
 int anzahlZeilenumbrueche = 0;
 int buttonClickedDrawCalls = 0;
 
@@ -15,10 +20,17 @@ boolean aufButtonX = false;
 boolean aufButtonY = false;
 boolean buttonClicked = false;
 String klartext = "";
+String morsetext = "";
 
 void setup(){
-  size(1000,600);
+  size(1000,720);
   background(240);
+  
+  //Textfeld
+    fill(255);
+    stroke(0);
+    strokeWeight(2);
+    rect(ax,ay,ab,ah);
 }
 
 void draw(){
@@ -81,13 +93,26 @@ void keyPressed(){
 void mouseClicked(){
   if(aufButtonX && aufButtonY){
     buttonClicked=true;
+    morsetext = umwandelnInMorse(klartext);
+    System.out.println(morsetext);
+    
+    
+    //Textfeld
+    fill(240);
+    stroke(0);
+    strokeWeight(2);
+    rect(ax,ay,ab,ah);
+    //Text im Textfeld
+    fill(0);
+    textSize(20);
+    text(morsetext,ax+5,ay+20);
   }
 }
 
 public static boolean istKonvertierbar(char buchstabe){
   String buchstabeString = Character.toString(buchstabe); 
   buchstabeString = buchstabeString.toUpperCase();
-  String konvertierbar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜß1234567890+-*/?.:'ÉÈ=()@";
+  String konvertierbar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜß1234567890+-*?/.:'ÉÈ=()@";
   for(int i=0; i<konvertierbar.length(); i++){
     if(buchstabeString.charAt(0) == konvertierbar.charAt(i)){
       return true;
@@ -95,6 +120,7 @@ public static boolean istKonvertierbar(char buchstabe){
   }
   return false;
 }
+
 
 public static String buchstabenUmwandeln(char buchstabe){
   //Quelle: https://www.code-knacker.de/morsealphabet.htm
@@ -128,7 +154,12 @@ public static String buchstabenUmwandeln(char buchstabe){
                                 {"@",".--.-."}
                               };
    int morseAlphabetLaenge = morseAlphabet.length;
+   // Im Fall eines Zeilenumbruchs, wird einfach ein Leerzeichen eingefügt
+   if(buchstabe == '\n'){
+     return " ";
+   }
    for(int i=0; i<morseAlphabetLaenge; i++){
+     
      if(morseAlphabet[i][0].equals(String.valueOf(buchstabe))){
        return morseAlphabet[i][1];
      }
