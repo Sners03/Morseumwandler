@@ -1,32 +1,46 @@
 int bx = 300; //x-Position des Butons
-int by = 340; //y-Position des Buttons
+int by = 350; //y-Position des Buttons
 int bb = 355; //Breite des Buttons
 int bh = 40; //Höhe des Buttons
 
 int ex = 20; //x-Position des Eingabefelds
-int ey = 20; //y-Position des Eingabefelds
+int ey = 30; //y-Position des Eingabefelds
 int eb = 960; //Breite des Eingabefelds
 int eh = 300; //Höhe des Eingabefelds
 
 int ax = 20;
-int ay = 400;
-int ab = 960; //Breite des Eingabefelds
-int ah = 300; //Höhe des Eingabefelds
+int ay = 430;
+int ab = 960; //Breite des Ausgabefelds
+int ah = 300; //Höhe des Ausgabefelds
 
 int anzahlZeilenumbrueche = 0;
 int buttonClickedDrawCalls = 0;
 
 boolean aufButtonX = false;
 boolean aufButtonY = false;
+
+boolean aufEingabefeldX = false;
+boolean aufEingabefeldY = false;
+
 boolean buttonClicked = false;
 String klartext = "";
 String morsetext = "";
 
 void setup(){
-  size(1000,720);
+  size(1000,750);
   background(240);
   
-  //Textfeld
+  // Überschrift Eingabefeld
+  fill(0);
+  textSize(20);
+  text("Eingabe Klartext:",20,20);
+  
+  // Überschrift Ausgabetext
+  fill(0);
+  textSize(20);
+  text("Ausgabe Morsecode:",20,420);
+  
+  //Ausgabefeld
     fill(255);
     stroke(0);
     strokeWeight(2);
@@ -36,6 +50,8 @@ void setup(){
 void draw(){
   aufButtonX = bx <= mouseX && bx + bb >= mouseX;
   aufButtonY = by <= mouseY && by + bh >= mouseY;
+  aufEingabefeldX = ex <= mouseX && ex + eb >= mouseX;
+  aufEingabefeldY = ey <= mouseY && ey + eh >= mouseY;
   if (aufButtonX && aufButtonY){
     fill(0,200,255);
   }
@@ -59,12 +75,16 @@ void draw(){
   //Eingabefeld
   fill(255);
   stroke(0);
+  if(aufEingabefeldX && aufEingabefeldY){
+    stroke(0,200,255);
+  }
   strokeWeight(2);
   rect(ex,ey,eb,eh);
   //Text in Eingabefeld
   fill(0);
   textSize(20);
   text(klartext,ex+5,ey+20);
+  stroke(0);
 }
 
 void keyPressed(){
@@ -95,14 +115,13 @@ void mouseClicked(){
     buttonClicked=true;
     morsetext = umwandelnInMorse(klartext);
     System.out.println(morsetext);
-    
-    
-    //Textfeld
-    fill(240);
+   
+    //Textfeld Ausgabe
+    fill(255);
     stroke(0);
     strokeWeight(2);
     rect(ax,ay,ab,ah);
-    //Text im Textfeld
+    //Text im Ausgabefeld
     fill(0);
     textSize(20);
     text(morsetext,ax+5,ay+20);
