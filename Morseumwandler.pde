@@ -1,3 +1,5 @@
+import java.util.ArrayList; // Hilft bei der Speicherung des Morsecodes
+
 int bx = 300; //x-Position des Butons
 int by = 350; //y-Position des Buttons
 int bb = 355; //Breite des Buttons
@@ -20,7 +22,7 @@ int anzahlZeilenumbrueche = 0; // Zählt die Zeilenumbrüche, gibt gleichzeitig 
 int[] zeichenProZeile = {0,0,0,0,0,0,0,0,0}; //Zählt die Zeichen pro Zeile um die Zeilenlänge nicht zu übersteigen
 
 static int anzahlZeilenumbruecheMorse = 0;
-static int[] zeichenProZeileMorse = {0,0,0,0,0,0,0,0,0}; 
+static ArrayList<Integer> zeichenProZeileMorse = new ArrayList<Integer>(); 
 
 boolean aufButtonX = false;
 boolean aufButtonY = false;
@@ -214,20 +216,24 @@ public static String umwandelnInMorse(String klartext){
   klartext = klartext.toUpperCase();
   String morsetext = "";
   String morseZeichen = "";
+  int zeilenLaenge;
   int klartextLaenge = klartext.length();
+  
+  zeichenProZeile.add(0);
   for(int i=0; i<klartextLaenge;i++){
     morseZeichen = buchstabenUmwandeln(klartext.charAt(i));
     // Länge des Zeichens aus dem Morsecode +1 für das Leerzeichen
     morsetext += morseZeichen + " ";
-    //Wenn es weniger als 8 Zeilenumbrüche gibt, wird ein neuer eingefügt
-    if(anzahlZeilenumbruecheMorse<=8){
-      zeichenProZeileMorse[anzahlZeilenumbruecheMorse]+= morseZeichen.length()+1;
-      if(zeichenProZeileMorse[anzahlZeilenumbruecheMorse]>155){
-        anzahlZeilenumbruecheMorse++;
-        morsetext += '\n';
+    zeilenLaenge = zeichenProZeileMorse.get(anzahlZeilenumbruecheMorse);
+    zeilenLaenge = morseZeichen.length()+1;
+    zeichenProZeileMorse.set(anzahlZeilenumbruecheMorse,zeilenLaenge);
+    
+    if(zeichenProZeileMorse.get(anzahlZeilenumbruecheMorse)>155){
+      anzahlZeilenumbruecheMorse++;
+      zeichenProZeile.add(0);
+      morsetext += '\n';
     }
     }
-  }
   if(anzahlZeilenumbruecheMorse>8){
         return "der Morsecode ist zu lang für das Ausgabefeld. \nihre Ausgabe wurde in der Datei \"output.txt\" gespeichert";
       }
