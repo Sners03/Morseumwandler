@@ -210,32 +210,38 @@ public static String buchstabenUmwandeln(char buchstabe){
    }
   return " (Fehler: Zeichen " + String.valueOf(buchstabe) + " nicht konvertierbar) ";
   }
+
+
   
-  
-public static String umwandelnInMorse(String klartext){
+public String umwandelnInMorse(String klartext){
   klartext = klartext.toUpperCase();
   String morsetext = "";
   String morseZeichen = "";
   int zeilenLaenge;
   int klartextLaenge = klartext.length();
   
-  zeichenProZeile.add(0);
+  zeichenProZeileMorse.add(0);
   for(int i=0; i<klartextLaenge;i++){
     morseZeichen = buchstabenUmwandeln(klartext.charAt(i));
     // Länge des Zeichens aus dem Morsecode +1 für das Leerzeichen
     morsetext += morseZeichen + " ";
     zeilenLaenge = zeichenProZeileMorse.get(anzahlZeilenumbruecheMorse);
-    zeilenLaenge = morseZeichen.length()+1;
+    zeilenLaenge += morseZeichen.length()+1;
     zeichenProZeileMorse.set(anzahlZeilenumbruecheMorse,zeilenLaenge);
     
     if(zeichenProZeileMorse.get(anzahlZeilenumbruecheMorse)>155){
       anzahlZeilenumbruecheMorse++;
-      zeichenProZeile.add(0);
+      zeichenProZeileMorse.add(0);
       morsetext += '\n';
     }
     }
   if(anzahlZeilenumbruecheMorse>8){
-        return "der Morsecode ist zu lang für das Ausgabefeld. \nihre Ausgabe wurde in der Datei \"output.txt\" gespeichert";
+    // https://processing.org/reference/saveStrings_.html (30.01.2022 13:05 Uhr)
+    String[] list = split(morsetext, '\n');
+
+    // Writes the strings to a file, each on a separate line
+    saveStrings("output.txt", list);
+    return "der Morsecode ist zu lang für das Ausgabefeld. \nihre Ausgabe wurde in der Datei \"output.txt\" gespeichert";
       }
   else{
   return morsetext;
