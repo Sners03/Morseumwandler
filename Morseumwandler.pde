@@ -13,8 +13,14 @@ int ay = 430;
 int ab = 960; //Breite des Ausgabefelds
 int ah = 300; //Höhe des Ausgabefelds
 
-int anzahlZeilenumbrueche = 0;
+
 int buttonClickedDrawCalls = 0;
+
+int anzahlZeilenumbrueche = 0; // Zählt die Zeilenumbrüche, gibt gleichzeitig die aktuelle Zeile zurück
+int[] zeichenProZeile = {0,0,0,0,0,0,0,0,0}; //Zählt die Zeichen pro Zeile um die Zeilenlänge nicht zu übersteigen
+
+static int anzahlZeilenumbruecheMorse = 0;
+static int[] zeichenProZeileMorse = {0,0,0,0,0,0,0,0,0}; 
 
 boolean aufButtonX = false;
 boolean aufButtonY = false;
@@ -45,7 +51,10 @@ void setup(){
     stroke(0);
     strokeWeight(2);
     rect(ax,ay,ab,ah);
+ // selectInput("Select a file to process:", "fileSelected");
 }
+
+
 
 void draw(){
   aufButtonX = bx <= mouseX && bx + bb >= mouseX;
@@ -86,29 +95,43 @@ void draw(){
   text(klartext,ex+5,ey+20);
   stroke(0);
 }
+void zeilenumbruch(){
+  // Hilfsfunktion zum einfügen eines Zeilenumbruchs
+  if(anzahlZeilenumbrueche<8){
+    klartext+='\n';
+    anzahlZeilenumbrueche++;
+  }
+}
 
+// Funktion würd Aufgerufen,wenn eine Taste gedrückt wird
 void keyPressed(){
   switch(key){
     case ENTER:
-      if(anzahlZeilenumbrueche<8){
-        klartext+='\n';
-        anzahlZeilenumbrueche++;}
+      zeilenumbruch();
       break;
     case BACKSPACE:
       if(klartext.length()>0){
         if(klartext.charAt(klartext.length()-1)=='\n'){
           anzahlZeilenumbrueche--;
         }
+        zeichenProZeile[anzahlZeilenumbrueche]--;
         klartext = klartext.substring(0,klartext.length()-1);
       }
       break;
     default:
-      if(istKonvertierbar(key)){
-        klartext+=key;
-    }
+      if(zeichenProZeile[anzahlZeilenumbrueche]<56){
+        if(istKonvertierbar(key)){
+          klartext+=key;
+          zeichenProZeile[anzahlZeilenumbrueche]++;
+        }
+      }
+      else{
+        zeilenumbruch();
+        }
       break;
-  }
+ }
 }
+
 
 void mouseClicked(){
   if(aufButtonX && aufButtonY){
@@ -194,9 +217,31 @@ public static String umwandelnInMorse(String klartext){
   int klartextLaenge = klartext.length();
   for(int i=0; i<klartextLaenge;i++){
     morseZeichen = buchstabenUmwandeln(klartext.charAt(i));
-    morsetext = morsetext + morseZeichen + " ";
+    // Länge des Zeichens aus dem Morsecode +1 für das Leerzeichen
+    morsetext += morseZeichen + " ";
+    //Wenn es weniger als 8 Zeilenumbrüche gibt, wird ein neuer eingefügt
+    if(anzahlZeilenumbruecheMorse<=8){
+      zeichenProZeileMorse[anzahlZeilenumbruecheMorse]+= morseZeichen.length()+1;
+      if(zeichenProZeileMorse[anzahlZeilenumbruecheMorse]>155){
+        anzahlZeilenumbruecheMorse++;
+        morsetext += '\n';
+    }
+    }
   }
+  if(anzahlZeilenumbruecheMorse>8){
+        return "der Morsecode ist zu lang für das Ausgabefeld. \nihre Ausgabe wurde in der Datei \"output.txt\" gespeichert";
+      }
+  else{
   return morsetext;
+  }
+}
+
+void fileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    println("User selected " + selection.getAbsolutePath());
+  }
 }
   
 /*  
